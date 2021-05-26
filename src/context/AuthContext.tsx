@@ -6,6 +6,7 @@ const initialState = {
   loading: false,
   error: '',
   userLogin: () => {},
+  registerUser: () =>{},
 };
 
 const authReducer = (state: any, action: any) => {
@@ -17,10 +18,13 @@ const authReducer = (state: any, action: any) => {
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
     case 'ERROR':
-      return { ...state, error: action.payload, loading: false };
+      return { ...state, error: action.payload, loading: false };    
+    case 'REGISTER':
+      return { ...state, users:action.payload };
     default:
       return state;
-  }
+  
+    }
 };
 
 export const AuthContext = createContext<AuthStateType>(initialState);
@@ -42,6 +46,25 @@ export const AuthProvider: React.FC = ({ children }) => {
   };
 
   // Function for userRegistration
+  const registerUser =  async (user: User) => {
+    //receive the register form data
+    dispatch({ type: 'SET_LOADING', payload: true });
+    try {
+      let { data } = await instance.post('/auth/register', user);
+      dispatch({type: 'REGISTER', payload: data}); //data
+      dispatch({type: 'ALERT', payload: 'Success!'}) //alert
+      setTimeout(() => {
+        dispatch({ type: 'ALERT', payload: '' });
+        }, 3000);
+
+      //send data back to the api to create a new user
+      dispatch({ type: 'REGISTER' });
+    } catch (e) {
+      console.log(e);
+      dispatch({ type: 'ERROR', payload: 'Sorry, we were unable to register this information' });
+    }
+
+  };
 
   return (
     <AuthContext.Provider
@@ -50,7 +73,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         alert: state.alert,
         loading: state.loading,
         userLogin,
-      }}>
+        registerUser,
+    }}>
       {children}
     </AuthContext.Provider>
   );

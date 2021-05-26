@@ -17,7 +17,7 @@ type InitialStateType = {
     users: User [];
     user: User | undefined;
     alert: boolean;
-    saveUser: (user:User) => void;
+    saveUser:  (user:User) => void;
 }
 
 
@@ -26,4 +26,5 @@ type AuthStateType = {
     loading:boolean;
     error: string;
     userLogin: (creds:Creds) => void;
+    registerUser: (user:User) => void;
 }
