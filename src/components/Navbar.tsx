@@ -3,6 +3,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const location = useLocation();
+  let history = useHistory();
 
   useEffect(() => {
     isLoggedIn();
@@ -15,8 +16,15 @@ const Navbar = () => {
 
   const userLogout = () => {
     // log user out
+    let token = localStorage.removeItem('token');
+    
     // send user to login page
+    history.push("auth/login");    
+    
+    return token;
   };
+
+
 
   return (
     <nav className='navbar navbar-expand-lg navbar-dark bg-dark'>
